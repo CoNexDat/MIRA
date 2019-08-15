@@ -1,0 +1,45 @@
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='timeline.css')}}">
+{% endblock %}
+{% block title %}Internet Monitoring System Latin America{% endblock %}
+
+{% block navbar %}
+    {{nav.top.render()}}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    <h2>Welcome to the Latin American Internet Monitoring System</h2>
+    <p>The goal of this project is to get a constantly updated overview of the Internet architecture in Latin America and the differences between the IPv4 and IPv6 technologies. Therefore, we present some performance measurements obtained on Latin America over the <a href="https://atlas.ripe.net/">RIPE Atlas</a> platform. To achieve this, source probes in Latin America are selected from the RIPE Atlas probe pool to target the Autonomous Systems in Latin America (taken from <a href="https://www,as-rank.caida.org">CAIDA AS-Rank</a>) with a traceroute. In the course of the data processing the <a href="https://www.caida.org/data/routing/routeviews-prefix2as.xml">Routeviews Dataset by CAIDA</a> is used to map the IP prefixes to the ASes. <br>
+    We provide the results, as well as the possibility to schedule new measurements. When creating new measurements, the results are then processed automatically and added to the website to be displayed and available for download.<br>
+    </p>
+    <form action="" method="post" role="form">
+    {{ form.csrf_token }}
+        <p>To schedule new measurements click here: {{ form.newMeasurement }}</p>
+    </form>
+    <div>
+        <h3>Latest Measurements</h3>
+        <ul class="timeline">
+            {% for key, value in timelineData %}
+                <li>
+                    <a href="/results/{{ key }}">{{ value }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <h3>About</h3>
+        <p>This project was realized by Malte Hansen in cooperation with the <a href="https://cnet.fi.uba.ar/en/">CoNexDat</a> group. For the backgrounds, details about the selection and implementation process and an analysis of the project, please refer to <a href="#">this paper</a>.<br>
+        The software is licensed under the ???-license and the complete source-code can be found <a href="#">here</a>.
+        </p>
+    
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

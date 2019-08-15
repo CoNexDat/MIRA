@@ -1,0 +1,102 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Internet Monitoring System Latin America{% endblock %}
+
+{% block navbar %}
+    {{nav.top.render()}}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    <h2>Results for {{ date }}</h2>    
+    <form action="" method="post" role="form">
+        {{ form.csrf_token }}    
+        <div>
+            {{ form.dates.label }}{{ form.dates(title="Results from other measurement campaigns.") }}
+            {{ form.changeDate }}
+        </div>
+        
+
+        <h4>Heatmaps of the median of the RTTs between a source and destination country in ms</h4>
+        <p>Acquired by running Paris traceroute measurements over the <a href="https://atlas.ripe.net/">RIPE Atlas</a> platform. One source per AS is selected from the RIPE Atlas probes located in Latin America. The destinations are stub ASes. These ASes were taken from the ASes in <a href="https://www,as-rank.caida.org">CAIDA AS-Rank</a>, which are located in Latin America and have a cone = 1.<br>
+        On the y-axis the source country and on the x-axis the destination country of a measurement are displayed. For each pair of source and destination, all the traceroutes with the corresponding countries are grouped together. The RTTs of the last hop of each of these traceroutes is taken and the median is calculated to produce the values displayed in the graphic.</p>
+            <img src={{ url_for('image', filename=heatmap_v4) }}>
+            <img src={{ url_for('image', filename=heatmap_v6) }}>
+        <h4>Visualization of the AS-Graph using the k-core decomposition by LaNet-vi</h4>
+        <p>An edgelist was created by building connections between adjacent hops of the traceroutes. With the help of <a href="https://lanet-vi.fi.uba.ar/">LaNet-vi</a> this edgelist was transformed into an AS-map. The map displays the k-core decomposition of the AS-network in Latin America. Meaning, that the nodes (ASes) are partitioned into layers in relation to their degree. The degree of each node was also essential in creating the graph properties.<br>
+        For further reading on the topic please consider the following papers:<br>
+        <ul>
+            <li>
+                Mariano G. Beiró, J. Ignacio Alvarez-Hamelin, and Jorge R. Busch:<br>
+                <a href="http://dx.doi.org/10.1088/1367-2630/10/12/125003">A low complexity visualization tool that helps to perform complex systems analysis.</a><br>
+                New J. Phys, 10(12):125003, 2008.
+            </li>
+            <li>
+                Diego Kiedanski, Eduardo Grampín, and J. Ignacio Alvarez-Hamelin:<br>
+                <a href="http://doi.acm.org/10.1145/3277103.3277122">"The Atlas Vision of IPv6 in Latin America: Topology and Latency"</a><br>
+                In Proceedings of the 10th Latin America Networking Conference, LANC '18, pages 40--47, New York, NY, USA, 2018. ACM.<br>
+        </ul>
+        The graph properties below were creating with the metrics stated in the 2nd paper.
+        </p>
+            <figure>
+                <img src={{ url_for('image', filename=lanet_v4) }}>
+                <figcaption>IPv4 k-core decomposition</figcaption>
+            </figure>
+            <figure>
+                <img src={{ url_for('image', filename=lanet_v6) }}>
+                <figcaption>IPv6 k-core decomposition</figcaption>
+            </figure>
+        <h4>Graph properties of the AS-map</h4>
+        <p>Degree Distribution</p>
+            <img src={{ url_for('image', filename=degree_v4) }}>
+            <img src={{ url_for('image', filename=degree_v6) }}>
+        <p>Average Neighbor Degree</p>
+            <img src={{ url_for('image', filename=avg_neighbor_v4) }}>
+            <img src={{ url_for('image', filename=avg_neighbor_v6) }}>
+        <p>Clustering Coefficient</p>
+            <img src={{ url_for('image', filename=cluster_v4) }}>
+            <img src={{ url_for('image', filename=cluster_v6) }}>
+
+    <h2>Select data to download: </h2>
+        <div class="dlScript">
+            {{ form.dlScript.label }} {{ form.dlScript(title="Select if you want to download the script used to download the measurement results over the RIPE-API.") }}
+        </div>
+        <div class="dlMsmIds">
+            {{ form.dlMsmIds.label }} {{ form.dlMsmIds(title="Select if you want to download the measurement ids of the campaign of the selected date.") }}
+        </div>
+        <div class="dlLanet">
+            {{ form.dlLanet.label }} {{ form.dlLanet(title="Select if you want to download the LaNet network graphs of the selected date.") }}
+        </div>
+        <div class="dlDegree">
+            {{ form.dlDegree.label }} {{ form.dlDegree(title="Select if you want to download the Degree Distribution of the selected date.") }}
+        </div>
+        <div class="dlNeighbor">
+            {{ form.dlNeighbor.label }} {{ form.dlNeighbor(title="Select if you want to download the Average Neighbor Degree of the selected date.") }}
+        </div>
+        <div class="dlCluster">
+            {{ form.dlCluster.label }} {{ form.dlCluster(title="Select if you want to download the Clustering Coefficient of the selected date.") }}
+        </div>
+        <div class="dlHeatmaps">
+            {{ form.dlHeatmaps.label }} {{ form.dlHeatmaps(title="Select if you want to download the Heatmaps of the selected date.") }}
+        </div>
+        <div class="dlAsns">
+            {{ form.dlAsns.label }} {{ form.dlAsns(title="Select if you want to download the autonomous system data of the selected date.") }}
+        </div>
+        <div class="dlProbes">
+            {{ form.dlProbes.label }} {{ form.dlProbes(title="Select if you want to download the RIPE-Probe data of the selected date.") }}
+        </div>
+        <div class="dlEdges">
+            {{ form.dlEdges.label }} {{ form.dlEdges(title="Select if you want to download the asn-edgelist of the selected date.") }}
+        </div>
+        <div class="dlPaths">
+            {{ form.dlPaths.label }} {{ form.dlPaths(title="Select if you want to download the AS-paths of the traceroutes of the selected date. A * behind an AS-number means that it can not be confirmed that the connection is direct.") }}
+        </div>
+        {{ form.download }}
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

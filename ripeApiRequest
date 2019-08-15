@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+curl --dump-header - -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d @./data.json https://atlas.ripe.net/api/v2/measurements/?key=$1 -o "ripeApiResponse.txt"

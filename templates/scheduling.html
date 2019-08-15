@@ -1,0 +1,98 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Internet Monitoring System Latin America{% endblock %}
+
+{% block navbar %}
+    {{nav.top.render()}}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    <h2>Enter your Measurement Parameters</h2>
+    <p>The measurements are performed over the <a href="https://atlas.ripe.net/">RIPE Atlas</a> platform by creating traceroute measurements with the below stated parameters. To create RIPE Atlas measurements RIPE Atlas credits, a RIPE Atlas user account (billing address) and an API-Key are needed. The credits will be withdrawn from the entered account. The API-Key needs the permission to create and stop measurements with the stated account.<br>
+    RIPE Atlas also has limitations, e.g. for concurrent measurements and daily credit spendings, in place. If you don't know about the limitations for measurement creation by RIPE Atlas, please visit their <a href="https://atlas.ripe.net/docs/udm/">website</a>.</p>
+    <form action="" method="post" role="form">
+        {{ form.csrf_token }}
+        
+        <div class="numProbes">
+            {{ form.numProbes.label }} {{ form.numProbes(title="The number of probes to use as sources in a campaign. 0 wont limit the available probes.") }}
+            {% if form.numProbes.errors %}
+                <ul class="errors">{% for error in form.numProbes.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="numAsns">
+            {{ form.numAsns.label }} {{ form.numAsns(title="The number of ASes to use as targets in a campaign. 0 wont limit the available ASes.") }}
+            {% if form.numAsns.errors %}
+                <ul class="errors">{% for error in form.numAsns.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="repetition">
+            {{ form.repetition.label }} {{ form.repetition(title="The number of times every target is selected as the destination for the measurements.") }}
+            {% if form.repetition.errors %}
+                <ul class="errors">{% for error in form.repetition.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="concurrent">
+            {{ form.concurrent.label }} {{ form.concurrent(title="The number of measurements running at the same time. For limitations please see RIPE Atlas website.") }}
+            {% if form.concurrent.errors %}
+                <ul class="errors">{% for error in form.concurrent.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="description">
+            {{ form.description.label }} {{ form.description(title="The description that will be displayed on the RIPE Atlas Website.", placeholder="What is your Description?", size=56) }}
+            {% if form.description.errors %}
+                <ul class="errors">{% for error in form.description.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="protocol">
+            {{ form.protocol.label }} {{ form.protocol(title="The protocol to be used in the measurements.") }}
+        </div>
+        <div class="packets">
+            {{ form.packets.label }} {{ form.packets(title="The number of packets send in a measurement execution. Value must be between 1 and 16.") }}
+            {% if form.packets.errors %}
+                <ul class="errors">{% for error in form.packets.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="first_hop">
+            {{ form.first_hop.label }} {{ form.first_hop(title="TTL of the first hop.") }}
+            {% if form.first_hop.errors %}
+                <ul class="errors">{% for error in form.first_hop.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="max_hops">
+            {{ form.max_hops.label }} {{ form.max_hops(title="Traceroute measurement stops after the hop at which the TTL reaches this value.") }}
+            {% if form.max_hops.errors %}
+                <ul class="errors">{% for error in form.max_hops.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="paris">
+            {{ form.paris.label }} {{ form.paris(title="The number of paris traceroute variations to try. Zero disables paris traceroute. Value must be between 0 and 64.") }}
+            {% if form.paris.errors %}
+                <ul class="errors">{% for error in form.paris.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="bill_to">
+            {{ form.bill_to.label }} {{ form.bill_to(title="The cost of this measurement is deducted from the RIPE-Atlas-User in this field.", placeholder="The email which will be used to pay the measurements", size = 42) }}
+            {% if form.bill_to.errors %}
+                <ul class="errors">{% for error in form.bill_to.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="api_key">
+            {{ form.api_key.label }} {{ form.api_key(title="Your RIPE-API-Key in the format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX. Needs the permissions to create and stop measurements.", placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", size=36) }}
+            {% if form.api_key.errors %}
+                <ul class="errors">{% for error in form.api_key.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="schedule">
+            {{ form.schedule.label }} {{ form.schedule(title="The amount of time after which the measurement will be repeated with the same values.") }}
+        </div>
+        {{ form.startMeasurement }}
+    </form>
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

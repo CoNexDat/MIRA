@@ -1,0 +1,2 @@
+Run this script to download the measurement data of your campaign and save it into your MongoDB. 
+Before executing the script make sure to adjust the path of the file 'measurementIDs.json' if you moved the file. Check, if the packages for Pandas, Requests and PyMongo are installed. Adjust the configuration for your database. In case you use a different database than MongoDB, replace the relevant parts in the code.
